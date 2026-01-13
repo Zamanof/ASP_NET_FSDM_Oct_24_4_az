@@ -1,0 +1,21 @@
+﻿@page
+@using ASP_NET_03._Razor_pages___services.Models
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var products = ViewData["Products"] as IEnumerable<Product>;
+}
+
+<div class="text-center">
+    <h1 class="display-4">Products</h1>
+    <div>
+        <ul>
+            @foreach (var product in products)
+            {
+                <li>
+                    <strong>@product.Name</strong> - <em>@product.Description</em>
+                </li>
+            }
+        </ul>
+    </div>
+</div>

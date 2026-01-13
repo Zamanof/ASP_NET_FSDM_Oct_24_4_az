@@ -1,0 +1,20 @@
+﻿@page
+@model ASP_NET_03._Razor_Pages_Product_Site.Pages.ProductsModel
+
+@if (Model.Products.Any())
+{
+    <div>
+        @foreach (var product in Model.Products.ToList())
+        {
+            <p>
+                <a href="#">@product.Name</a>
+            </p>
+        }
+    </div>
+}
+else
+{
+    <div>
+        <p>No Data</p>
+    </div>
+}

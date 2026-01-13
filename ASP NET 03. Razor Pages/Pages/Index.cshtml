@@ -1,0 +1,44 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    var name = ViewData["Name"] as string;
+    var age = (int)ViewData["Age"]!;
+    // var person = new IndexModel().person1;
+    // var foo = new IndexModel().Foo;
+
+    var person = Model.person1;
+    var foo = Model.Foo;
+}
+
+@functions{
+    string message(string str) => str.ToLower();
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <h2>@message("LOrem IpsuM Dolor sit AMET")</h2>
+    <h2>@foo("Antananarivu")</h2>
+    @if(name is not null)
+    {
+        <p>Name: @name</p>
+        <p>Age: @age</p>
+    }
+    else
+    {
+        <p>Name: @string.Empty</p>
+        <p>Age: 0</p>
+    }
+
+    @if (person.Name is not null)
+    {
+        <p>Name: @Model.person1.Name</p>
+        <p>Age: @person.Age</p>
+    }
+    else
+    {
+        <p>Name: @string.Empty</p>
+        <p>Age: 0</p>
+    }
+    
+</div>
