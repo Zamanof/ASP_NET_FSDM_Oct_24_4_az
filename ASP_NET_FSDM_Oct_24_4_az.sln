@@ -57,6 +57,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASP NET 09", "ASP NET 09", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 09. TaskFlow AutoMapper", "ASP NET 09. TaskFlow AutoMapper\ASP NET 09. TaskFlow AutoMapper.csproj", "{B21C377C-726B-4A94-8219-F6B465F27EFC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 09. TaskFlow Swagger Documentation", "ASP NET 09. TaskFlow Swagger Documentation\ASP NET 09. TaskFlow Swagger Documentation.csproj", "{D6616516-6A45-4A80-8933-13D228943F7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,10 @@ Global
 		{B21C377C-726B-4A94-8219-F6B465F27EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B21C377C-726B-4A94-8219-F6B465F27EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B21C377C-726B-4A94-8219-F6B465F27EFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6616516-6A45-4A80-8933-13D228943F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6616516-6A45-4A80-8933-13D228943F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6616516-6A45-4A80-8933-13D228943F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6616516-6A45-4A80-8933-13D228943F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -159,6 +165,7 @@ Global
 		{353550F1-430C-404A-BAA2-9E4E8B4F3714} = {20C8F6C9-6CAA-487C-B4D5-AFCD4D36C754}
 		{4F5C0468-5D1C-4B48-890E-CD50A4453699} = {85D52282-3D6D-43EB-8D04-9E6E00CD2E34}
 		{B21C377C-726B-4A94-8219-F6B465F27EFC} = {B03C4D6D-A2D6-485D-A7A4-F80F3FBD6BBA}
+		{D6616516-6A45-4A80-8933-13D228943F7A} = {B03C4D6D-A2D6-485D-A7A4-F80F3FBD6BBA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {497B41C6-99E9-4EFF-B1E0-382CB277FD5D}
