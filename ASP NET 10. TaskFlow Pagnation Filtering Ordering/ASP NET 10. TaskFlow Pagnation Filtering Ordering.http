@@ -1,0 +1,6 @@
+@ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering_HostAddress = http://localhost:5084
+
+GET {{ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

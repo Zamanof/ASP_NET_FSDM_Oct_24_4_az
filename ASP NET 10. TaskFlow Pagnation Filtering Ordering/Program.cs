@@ -1,7 +1,7 @@
-using ASP_NET_09._TaskFlow_Swagger_Documentation.Data;
-using ASP_NET_09._TaskFlow_Swagger_Documentation.Mappings;
-using ASP_NET_09._TaskFlow_Swagger_Documentation.Services;
-using ASP_NET_09._TaskFlow_Swagger_Documentation.Services.Interfaces;
+using ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering.Data;
+using ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering.Mappings;
+using ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering.Services;
+using ASP_NET_10._TaskFlow_Pagnation_Filtering_Ordering.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
