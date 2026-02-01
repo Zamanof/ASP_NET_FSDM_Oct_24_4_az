@@ -1,0 +1,6 @@
+@ASP_NET_11._TaskFlow_Fluent_Validation_Global_Exception_handler_HostAddress = http://localhost:5255
+
+GET {{ASP_NET_11._TaskFlow_Fluent_Validation_Global_Exception_handler_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

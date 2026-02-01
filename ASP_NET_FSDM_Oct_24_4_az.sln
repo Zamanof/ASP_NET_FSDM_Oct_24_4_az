@@ -63,6 +63,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASP NET 10", "ASP NET 10", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 10. TaskFlow Pagnation Filtering Ordering", "ASP NET 10. TaskFlow Pagnation Filtering Ordering\ASP NET 10. TaskFlow Pagnation Filtering Ordering.csproj", "{99691BA5-0E21-4334-A483-5603998F20AE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ASP NET 11", "ASP NET 11", "{7E7473C8-434D-4CB7-A698-8DA4067CDC15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 11. TaskFlow Fluent Validation Global Exception handler", "ASP NET 11. TaskFlow Fluent Validation Global Exception handler\ASP NET 11. TaskFlow Fluent Validation Global Exception handler.csproj", "{DDA72047-370C-4AFB-BCBF-B2098EC4287F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,6 +153,10 @@ Global
 		{99691BA5-0E21-4334-A483-5603998F20AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99691BA5-0E21-4334-A483-5603998F20AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99691BA5-0E21-4334-A483-5603998F20AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA72047-370C-4AFB-BCBF-B2098EC4287F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA72047-370C-4AFB-BCBF-B2098EC4287F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA72047-370C-4AFB-BCBF-B2098EC4287F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA72047-370C-4AFB-BCBF-B2098EC4287F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,6 +183,7 @@ Global
 		{B21C377C-726B-4A94-8219-F6B465F27EFC} = {B03C4D6D-A2D6-485D-A7A4-F80F3FBD6BBA}
 		{D6616516-6A45-4A80-8933-13D228943F7A} = {B03C4D6D-A2D6-485D-A7A4-F80F3FBD6BBA}
 		{99691BA5-0E21-4334-A483-5603998F20AE} = {DFA6687D-3B2C-4F49-9306-2613FE04146F}
+		{DDA72047-370C-4AFB-BCBF-B2098EC4287F} = {7E7473C8-434D-4CB7-A698-8DA4067CDC15}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {497B41C6-99E9-4EFF-B1E0-382CB277FD5D}
