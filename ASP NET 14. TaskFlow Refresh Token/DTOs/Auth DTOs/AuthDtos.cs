@@ -1,4 +1,4 @@
-﻿namespace ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.DTOs.Auth_DTOs;
+﻿namespace ASP_NET_14._TaskFlow_Refresh_Token.DTOs.Auth_DTOs;
 
 public class RegisterRequest
 {
@@ -49,9 +49,17 @@ public class AuthResponseDto
     /// </summary>
     public string AccessToken { get; set; } = string.Empty;
     /// <summary>
-    /// Token Expirens date 
+    /// Token Expires date 
     /// </summary>
-    public DateTime ExpiresAt { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
+    /// <summary>
+    /// Refresh token
+    /// </summary>
+    public string RefreshToken { get; set; } = string.Empty;
+    /// <summary>
+    /// RefreshToken Expires date 
+    /// </summary>
+    public DateTimeOffset RefreshTokenExpiresAt { get; set; }
     /// <summary>
     /// User Email
     /// </summary>
@@ -59,4 +67,9 @@ public class AuthResponseDto
     public string Email { get; set; } = string.Empty;
 
     public IEnumerable<string> Roles { get; set; } = new List<string>();
+}
+
+public class RefreshTokenRequest
+{
+    public string RefreshToken { get; set; } = string.Empty;
 }
