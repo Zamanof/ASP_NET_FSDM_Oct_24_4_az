@@ -1,10 +1,10 @@
-﻿using ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.Common;
-using ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.DTOs.Project_DTOs;
-using ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.Services;
+﻿using ASP_NET_14._TaskFlow_Refresh_Token.Common;
+using ASP_NET_14._TaskFlow_Refresh_Token.DTOs.Project_DTOs;
+using ASP_NET_14._TaskFlow_Refresh_Token.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.Controllers;
+namespace ASP_NET_14._TaskFlow_Refresh_Token.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -45,10 +45,6 @@ public class ProjectsController : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status404NotFound)]
-<<<<<<< HEAD
-    //[Authorize(Roles ="Admin, Manager, User")]
-=======
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
     [Authorize(Policy = "UserOrAbove")]
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> GetById(int id)
     {
@@ -70,12 +66,7 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status400BadRequest)]
-<<<<<<< HEAD
-    //[Authorize(Roles = "Admin, Manager")]
-    [Authorize(Policy ="AdminOrManager")]
-=======
     [Authorize(Policy = "AdminOrManager")]
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> Create([FromBody] CreateProjectRequest createProjectRequest)
     {
         if (!ModelState.IsValid)
@@ -103,10 +94,6 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status404NotFound)]
-<<<<<<< HEAD
-    //[Authorize(Roles = "Admin, Manager")]
-=======
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
     [Authorize(Policy = "AdminOrManager")]
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> Update(
         int id,
@@ -133,10 +120,6 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status404NotFound)]
-<<<<<<< HEAD
-    //[Authorize(Roles = "Admin")]
-=======
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
     [Authorize(Policy = "AdminOnly")]
     public async Task<ActionResult<ApiResponse<object?>>> Delete(int id)
     {
