@@ -26,7 +26,7 @@ public class RegisterRequest
     /// Confirmed Password
     /// </summary>
     /// <example>Pass123</example>
-    public string ConfirmedPassword { get; set; } = string.Empty;
+    public string ConfirmPassword { get; set; } = string.Empty;
 
 }
 public class LoginRequest

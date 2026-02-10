@@ -12,7 +12,7 @@ namespace ASP_NET_14._TaskFlow_Refresh_Token.Services;
 
 public class AuthService : IAuthService
 {
-   
+
     private const string RefreshTokenType = "refresh";
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IConfiguration _configuration;

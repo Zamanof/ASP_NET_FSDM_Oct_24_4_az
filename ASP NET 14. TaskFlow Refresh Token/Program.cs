@@ -158,6 +158,20 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
+builder.Services.AddCors(
+    optons =>
+    {
+        optons.AddDefaultPolicy(
+            policy=> policy.WithOrigins(
+                "http://localhost:3000",
+                "http://127.0.0.1:3000" )
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials()
+            );
+    }
+    );
+
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
@@ -179,6 +193,11 @@ if (app.Environment.IsDevelopment())
         );
 }
 app.UseMiddleware<GlobalExceptionMiddleware>();
+
+app.UseCors();
+
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
