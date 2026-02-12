@@ -22,7 +22,6 @@ const FORBIDDEN_TASKS = 'Creating and editing tasks is available only to Manager
 const COLUMNS: TaskStatus[] = ['ToDo', 'InProgress', 'Done'];
 const PRIORITIES: TaskPriority[] = ['Low', 'Medium', 'High'];
 
-// Значения enum на бэкенде:
 // TaskStatus: ToDo = 0, InProgress = 1, Done = 2
 // TaskPriority: Low = 0, Medium = 1, High = 2
 const STATUS_TO_ENUM: Record<TaskStatus, number> = {

@@ -73,7 +73,9 @@ export async function apiFetch<T>(
     }
 
     const contentType = res.headers.get('content-type');
-    const isJson = contentType?.includes('application/json') || contentType?.includes('application/problem+json');
+    const isJson
+        = contentType?.includes('application/json')
+        || contentType?.includes('application/problem+json');
 
     if (!isJson) {
         return { ok: res.ok, status: res.status };

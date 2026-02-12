@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const applyAuth = useCallback((data: AuthResponse) => {
-    // AuthResponse приходит с полем accessToken, а не token
+
     setAuthTokens(data.accessToken, data.refreshToken);
     setUser({ email: data.email, roles: [...(data.roles ?? [])] });
     saveStored({
