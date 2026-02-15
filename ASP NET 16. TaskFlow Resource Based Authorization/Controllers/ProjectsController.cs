@@ -1,20 +1,34 @@
 ﻿using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Common;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.DTOs.Project_DTOs;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Services;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ASP_NET_16._TaskFlow_Resource_Based_Authorization.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy ="UserOrAbove")]
 public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
+    private readonly IAuthorizationService _authorizationService;
 
-    public ProjectsController(IProjectService projectService)
+    private string? UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
+    private IList<string> UserRoles 
+        => User.Claims
+               .Where(c => c.Type == ClaimTypes.Role)
+               .Select(c => c.Value)
+               .ToList();
+
+    public ProjectsController(
+                IProjectService projectService, 
+                IAuthorizationService authorizationService)
     {
         _projectService = projectService;
+        _authorizationService = authorizationService;
     }
 
     /// <summary>
@@ -27,11 +41,9 @@ public class ProjectsController : ControllerBase
     /// <response code="200">Projects were successfully retrieved.</response>
     [HttpGet]
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<ProjectResponseDto>>), StatusCodes.Status200OK)]
-    //[Authorize(Roles ="Admin, Manager, User")]
-    [Authorize(Policy ="UserOrAbove")]
     public async Task<ActionResult<ApiResponse<IEnumerable<ProjectResponseDto>>>> GetAll()
     {
-        var projects = await _projectService.GetAllAsync();
+        var projects = await _projectService.GetAllForUserAsync(UserId!, UserRoles);
         return Ok(ApiResponse<IEnumerable<ProjectResponseDto>>.SuccessResponse(projects, "Projects returned successfully"));
     }
 
@@ -45,15 +57,22 @@ public class ProjectsController : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status404NotFound)]
-    [Authorize(Policy = "UserOrAbove")]
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> GetById(int id)
     {
-        var project = await _projectService.GetByIdAsync(id);
+        var project = await _projectService.GetProjectEntityAsync(id);
 
-        if (project is null)
-            return NotFound(ApiResponse<ProjectResponseDto>.ErrorResponse($"Project with ID {id} not found"));
+        if (project is null) 
+            return NotFound($"Project with ID {id} not found");
 
-        return Ok(ApiResponse<ProjectResponseDto>.SuccessResponse(project, "Project returned successfully"));
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectMemberOrHigher");
+        
+        if (!authResult.Succeeded) 
+            return Forbid();
+
+        var projectResponse = await _projectService.GetByIdAsync(id);
+
+        return Ok(ApiResponse<ProjectResponseDto>.SuccessResponse(projectResponse, "Project returned successfully"));
     }
 
     /// <summary>
@@ -66,13 +85,13 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status400BadRequest)]
-    [Authorize(Policy = "AdminOrManager")]
+    [Authorize (Policy ="AdminOrManager")]
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> Create([FromBody] CreateProjectRequest createProjectRequest)
     {
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<ProjectResponseDto>.ErrorResponse("Validation failed", ModelState));
 
-        var createdProject = await _projectService.CreateAsync(createProjectRequest);
+        var createdProject = await _projectService.CreateAsync(createProjectRequest, UserId!);
 
         return CreatedAtAction(
             nameof(GetById),
@@ -94,13 +113,24 @@ public class ProjectsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<ProjectResponseDto>), StatusCodes.Status404NotFound)]
-    [Authorize(Policy = "AdminOrManager")]
+    
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> Update(
         int id,
         [FromBody] UpdateProjectRequest updateProjectRequest)
     {
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<ProjectResponseDto>.ErrorResponse("Validation failed", ModelState));
+
+        var project = await _projectService.GetProjectEntityAsync(id);
+
+        if (project is null)
+            return NotFound($"Project with ID {id} not found");
+
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (!authResult.Succeeded)
+            return Forbid();
 
         var updatedProject = await _projectService.UpdateAsync(id, updateProjectRequest);
 
@@ -120,15 +150,116 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{id:int}")]
     [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status404NotFound)]
-    [Authorize(Policy = "AdminOnly")]
-    public async Task<ActionResult<ApiResponse<object?>>> Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var deleted = await _projectService.DeleteAsync(id);
+        var project = await _projectService.GetProjectEntityAsync(id);
 
-        if (!deleted)
-            return NotFound(ApiResponse<object?>.ErrorResponse($"Project with ID {id} not found"));
+        if (project is null)
+            return NotFound($"Project with ID {id} not found");
 
-        // Wrapper-lə 204 qaytarsan body göstərilməyəcək. Ona görə vahid wrapper üçün 200 daha məntiqlidir.
-        return Ok(ApiResponse<object?>.SuccessResponse(null, "Project deleted successfully"));
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (!authResult.Succeeded)
+            return Forbid();
+
+         await _projectService.DeleteAsync(id);        
+
+        return NoContent();
     }
+
+    [HttpGet("{projectId}/members")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<ProjectMemberResponseDto>>>> 
+        GetMembers(int projectId)
+    {
+        var project = await _projectService.GetProjectEntityAsync(projectId);
+
+        if (project is null)
+            return NotFound($"Project with ID {projectId} not found");
+
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectMemberOrHigher");
+
+        if (!authResult.Succeeded)
+            return Forbid();
+
+        var members = await _projectService.GetMembersAsync(projectId);
+
+        return Ok(ApiResponse<IEnumerable<ProjectMemberResponseDto>>
+            .SuccessResponse(members, "Members retrive successfully"));
+    }
+
+    [HttpGet("{projectId}/available-users")]
+    public async Task<ActionResult<ApiResponse<IEnumerable<AvailableUserDto>>>>
+        GetAvailableUsersToAdd(int projectId)
+    {
+        var project = await _projectService.GetProjectEntityAsync(projectId);
+
+        if (project is null)
+            return NotFound($"Project with ID {projectId} not found");
+
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (!authResult.Succeeded)
+            return Forbid();
+
+        var users = await _projectService.GetAvailableUsersToAddAsync(projectId);
+
+        return Ok(ApiResponse<IEnumerable<AvailableUserDto>>
+            .SuccessResponse(users, "Users available to add"));
+    }
+
+    [HttpPost("{projectId}/members")]
+    public async Task<IActionResult> AddMember(
+                                            int projectId, 
+                                            [FromBody] AddProjectMemberRequest request)
+    {
+        var project = await _projectService.GetProjectEntityAsync(projectId);
+
+        if (project is null)
+            return NotFound($"Project with ID {projectId} not found");
+
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (!authResult.Succeeded)
+            return Forbid();
+
+        var userIdOrEmail = request.UserId ?? request.Email?.Trim();
+
+        if (string.IsNullOrEmpty(userIdOrEmail))
+            return BadRequest("Incorrect User Id or Email");
+
+        var isAdded = await _projectService.AddMemberAsync(projectId, userIdOrEmail);
+
+        if (!isAdded)
+            return BadRequest("User Not Found or already added");
+
+        return NoContent();
+    }
+
+    [HttpDelete("{projectId}/members/{userId}")]
+    public async Task<IActionResult> RemoveMember(
+                                            int projectId,
+                                            string userId)
+    {
+        var project = await _projectService.GetProjectEntityAsync(projectId);
+
+        if (project is null)
+            return NotFound($"Project with ID {projectId} not found");
+
+        var authResult = await _authorizationService
+                                    .AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (!authResult.Succeeded)
+            return Forbid();
+
+        var isRemoved = await _projectService.RemoveMemberAsync(projectId, userId);
+
+        if(!isRemoved) 
+            return NotFound();
+        return NoContent();
+    }
+
 }

@@ -21,9 +21,39 @@ public class ProjectService : IProjectService
         _userManager = userManager;
     }
 
-    public Task<bool> AddMemberAsync(int projectId, string userIdOrEmail)
+    public async Task<bool> AddMemberAsync(int projectId, string userIdOrEmail)
     {
-        throw new NotImplementedException();
+        var project = await _context.Projects.FindAsync(projectId);
+
+        if (project is null) return false;
+
+        ApplicationUser? user = null;
+
+        if (userIdOrEmail.Contains("@"))
+        {
+            user = await _userManager.FindByEmailAsync(userIdOrEmail);
+        }
+        else
+        {
+            user = await _userManager.FindByIdAsync(userIdOrEmail);
+        }
+
+        if (user is null) return false;
+        var members = _context.ProjectMembers.ToList();
+        if (await _context.ProjectMembers
+            .AnyAsync(m => m.ProjectId == projectId && m.UserId == user.Id))
+            return false;
+
+        _context.ProjectMembers.Add(new ProjectMember
+        {
+            UserId = user.Id,
+            ProjectId = projectId,
+            CreatedAt = DateTimeOffset.UtcNow
+            
+        });
+
+        await _context.SaveChangesAsync();
+        return true;
     }
 
     public async Task<ProjectResponseDto> CreateAsync(
@@ -55,17 +85,6 @@ public class ProjectService : IProjectService
         return true;
     }
 
-    public async Task<IEnumerable<ProjectResponseDto>> GetAllAsync()
-    {
-        var projects = await _context
-                            .Projects
-                            .Include(p => p.Tasks)
-                            .ToListAsync();
-
-        return _mapper.Map<IEnumerable<ProjectResponseDto>>(projects);
-
-    }
-
     public async Task<IEnumerable<ProjectResponseDto>> GetAllForUserAsync(
         string userId, 
         IList<string> roles)
@@ -76,7 +95,7 @@ public class ProjectService : IProjectService
         if (roles.Contains("Admin")) { }
         else if(roles.Contains("Manager"))
         {
-            query = query.Where(p => p.OwnerId == userId);
+            query = query.Where(p => p.OwnerId == userId || p.Members.Any(m => m.UserId == userId));
         }
         else
         {
@@ -87,7 +106,7 @@ public class ProjectService : IProjectService
         return _mapper.Map<IEnumerable<ProjectResponseDto>>(projects);
     }
 
-    public async Task<IEnumerable<AvailableUserDto>> GetAvailableUsersForAddAsync(int projectId)
+    public async Task<IEnumerable<AvailableUserDto>> GetAvailableUsersToAddAsync(int projectId)
     {
         var membersIds = await _context.ProjectMembers
                             .Where(m => m.ProjectId == projectId)
@@ -150,8 +169,16 @@ public class ProjectService : IProjectService
 
     public async Task<bool> RemoveMemberAsync(int projectId, string userId)
     {
-        throw new NotImplementedException();
-       
+        var member = await _context.ProjectMembers
+            .FirstOrDefaultAsync(m => m.ProjectId == projectId && m.UserId == userId);
+
+        if (member is null) return false;
+
+        _context.ProjectMembers.Remove(member);
+
+        await _context.SaveChangesAsync();
+
+        return true;
     }
 
     public async Task<ProjectResponseDto?> UpdateAsync(

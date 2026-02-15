@@ -12,7 +12,7 @@ namespace ASP_NET_16._TaskFlow_Resource_Based_Authorization.Services
         Task<ProjectResponseDto?> UpdateAsync(int id, UpdateProjectRequest updateProjectRequest);
         Task<bool> DeleteAsync(int id);
         Task<IEnumerable<ProjectMemberResponseDto>> GetMembersAsync(int projectId);
-        Task<IEnumerable<AvailableUserDto>> GetAvailableUsersForAddAsync(int projectId);
+        Task<IEnumerable<AvailableUserDto>> GetAvailableUsersToAddAsync(int projectId);
         Task<bool> AddMemberAsync(int projectId, string userIdOrEmail);
         Task<bool> RemoveMemberAsync(int projectId, string userId);
     }

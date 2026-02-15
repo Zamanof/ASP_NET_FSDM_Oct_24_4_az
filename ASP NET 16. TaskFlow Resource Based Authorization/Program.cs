@@ -138,12 +138,38 @@ builder.Services.AddAuthentication(
 builder.Services.AddAuthorization(
     options =>
     {
-        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("AdminOrManager", policy => policy.RequireRole("Admin", "Manager"));
-        options.AddPolicy("UserOrAbove", policy => policy.RequireRole("Admin", "Manager", "User"));
-        options.AddPolicy("ProjectOwnerOrAdmin", policy => policy.Requirements.Add(new ProjectOwnerOrAdminRequirment()));
-        options.AddPolicy("ProjectMemberOrHigher", policy => policy.Requirements.Add(new ProjectMemberOrHigherRequirment()));
-        options.AddPolicy("TaskStatusChange", policy => policy.Requirements.Add(new TaskStatusChangeRequirment()));
+        options.AddPolicy(
+            "AdminOnly", 
+            policy 
+                => policy.RequireRole("Admin"));
+        
+        options.AddPolicy(
+            "AdminOrManager", 
+            policy 
+                => policy.RequireRole("Admin", "Manager"));
+        
+        options.AddPolicy(
+            "UserOrAbove", 
+            policy 
+                => policy.RequireRole("Admin", "Manager", "User"));
+        
+
+        options.AddPolicy(
+            "ProjectOwnerOrAdmin", 
+                policy => 
+                    policy.Requirements.Add(new ProjectOwnerOrAdminRequirment()));
+        
+
+        options.AddPolicy(
+            "ProjectMemberOrHigher", 
+                policy => 
+                policy.Requirements.Add(new ProjectMemberOrHigherRequirment()));
+        
+
+        options.AddPolicy(
+            "TaskStatusChange", 
+            policy => 
+                policy.Requirements.Add(new TaskStatusChangeRequirment()));
     }
     );
 

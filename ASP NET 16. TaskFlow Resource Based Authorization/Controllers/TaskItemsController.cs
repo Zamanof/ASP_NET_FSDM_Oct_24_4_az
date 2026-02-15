@@ -1,6 +1,7 @@
 ﻿using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Common;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.DTOs.Task_Items_DTOs;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -8,13 +9,21 @@ namespace ASP_NET_16._TaskFlow_Resource_Based_Authorization.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Policy ="UserOrAbove")]
 public class TaskItemsController : ControllerBase
 {
     private readonly ITaskItemService _taskItemService;
+    private readonly IProjectService _projectService;
+    private readonly IAuthorizationService _authorizationService;
 
-    public TaskItemsController(ITaskItemService taskItemService)
+    public TaskItemsController(
+        ITaskItemService taskItemService, 
+        IAuthorizationService authorizationService, 
+        IProjectService projectService)
     {
         _taskItemService = taskItemService;
+        _authorizationService = authorizationService;
+        _projectService = projectService;
     }
 
     private static Dictionary<string, string[]> ToValidationErrors(ModelStateDictionary modelState)
@@ -74,6 +83,14 @@ public class TaskItemsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<TaskItemResponseDto>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<TaskItemResponseDto>>> GetById(int id)
     {
+        var project = await _projectService.GetProjectEntityAsync(id);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHiger");
+
+        if (authResult is null) return Forbid();
+
         //throw new NullReferenceException();
         var task = await _taskItemService.GetByIdAsync(id);
 
@@ -95,10 +112,16 @@ public class TaskItemsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<IEnumerable<TaskItemResponseDto>>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<IEnumerable<TaskItemResponseDto>>>> GetByProjectId(int projectId)
     {
+        var project = await _projectService.GetProjectEntityAsync(projectId);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHiger");
+        
+        if (authResult is null) return Forbid();
+
         var tasks = await _taskItemService.GetByProjectIdAsync(projectId);
 
-        // Əgər sənin service boş list qaytarırsa -> 200 OK normaldır.
-        // Əgər project mövcud deyilsə və service null qaytarırsa -> 404 qaytarırıq.
         if (tasks is null)
             return NotFound(ApiResponse<IEnumerable<TaskItemResponseDto>>.ErrorResponse($"Project with ID {projectId} not found"));
 
@@ -119,6 +142,14 @@ public class TaskItemsController : ControllerBase
     {
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<TaskItemResponseDto>.ErrorResponse("Validation failed", ToValidationErrors(ModelState)));
+
+        var project = await _projectService.GetProjectEntityAsync(createTaskItemRequest.ProjectId);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (authResult is null) return Forbid();
 
         var task = await _taskItemService.CreateAsync(createTaskItemRequest);
 
@@ -147,7 +178,39 @@ public class TaskItemsController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ApiResponse<TaskItemResponseDto>.ErrorResponse("Validation failed", ToValidationErrors(ModelState)));
 
+        var project = await _projectService.GetProjectEntityAsync(id);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (authResult is null) return Forbid();
+
+
         var task = await _taskItemService.UpdateAsync(id, updateTaskItemRequest);
+
+        if (task is null)
+            return NotFound(ApiResponse<TaskItemResponseDto>.ErrorResponse($"Task item with ID {id} not found"));
+
+        return Ok(ApiResponse<TaskItemResponseDto>.SuccessResponse(task, "Task item updated successfully"));
+    }
+
+    [HttpPatch("{id:int}/status")]
+    public async Task<ActionResult<ApiResponse<TaskItemResponseDto>>> TaskStatusUpdate(int id, [FromBody] TaskStatusUpdateRequest request)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ApiResponse<TaskItemResponseDto>.ErrorResponse("Validation failed", ToValidationErrors(ModelState)));
+
+        var project = await _projectService.GetProjectEntityAsync(id);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "TaskStatusChange");
+
+        if (authResult is null) return Forbid();
+
+
+        var task = await _taskItemService.UpdateStatusAsync(id, request);
 
         if (task is null)
             return NotFound(ApiResponse<TaskItemResponseDto>.ErrorResponse($"Task item with ID {id} not found"));
@@ -167,6 +230,16 @@ public class TaskItemsController : ControllerBase
     [ProducesResponseType(typeof(ApiResponse<object?>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<object?>>> Delete(int id)
     {
+        if (!ModelState.IsValid)
+            return BadRequest(ApiResponse<TaskItemResponseDto>.ErrorResponse("Validation failed", ToValidationErrors(ModelState)));
+
+        var project = await _projectService.GetProjectEntityAsync(id);
+
+        if (project is null) return NotFound();
+
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
+
+        if (authResult is null) return Forbid();
         var isDeleted = await _taskItemService.DeleteAsync(id);
 
         if (!isDeleted)

@@ -23,13 +23,13 @@ public class TaskItemService : ITaskItemService
     {
         var isProjectExists = await _context
                                         .Projects
-                                        .AnyAsync(p=> p.Id == createTaskItemRequest.ProjectId);
+                                        .AnyAsync(p => p.Id == createTaskItemRequest.ProjectId);
 
         if (!isProjectExists)
             throw new ArgumentException($"Project with ID {createTaskItemRequest.ProjectId} not found");
         var taskItem = _mapper.Map<TaskItem>(createTaskItemRequest);
 
-       
+
 
         _context.TaskItems.Add(taskItem);
         await _context.SaveChangesAsync();
@@ -69,7 +69,7 @@ public class TaskItemService : ITaskItemService
         var taskItem = await _context
             .TaskItems
             .Include(t => t.Project)
-            .FirstOrDefaultAsync(t=> t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);
 
         if (taskItem is null) return null;
 
@@ -80,8 +80,8 @@ public class TaskItemService : ITaskItemService
     {
         var taskItems = await _context
             .TaskItems
-            .Include(t=>t.Project)
-            .Where(t=> t.ProjectId == projectId)
+            .Include(t => t.Project)
+            .Where(t => t.ProjectId == projectId)
             .ToListAsync();
 
         return _mapper.Map<IEnumerable<TaskItemResponseDto>>(taskItems);
@@ -100,7 +100,7 @@ public class TaskItemService : ITaskItemService
         // filter by Status
         if (!string.IsNullOrWhiteSpace(queryParams.Status))
         {
-            if( Enum.TryParse<TaskStatus>(queryParams.Status, out var status))
+            if (Enum.TryParse<TaskStatus>(queryParams.Status, out var status))
             {
                 query = query.Where(t => t.Status == status);
             }
@@ -131,10 +131,10 @@ public class TaskItemService : ITaskItemService
         if (!string.IsNullOrWhiteSpace(queryParams.Sort))
             query = ApplySorting(query, queryParams.Sort, queryParams.SortDirection);
         else
-            query = query.OrderBy(t=> t.Id);
+            query = query.OrderBy(t => t.Id);
 
-            // Pagination
-            var totalCount = await query.CountAsync();
+        // Pagination
+        var totalCount = await query.CountAsync();
 
         var skip = (queryParams.Page - 1) * queryParams.PageSize;
 
@@ -185,8 +185,8 @@ public class TaskItemService : ITaskItemService
     {
         var task = await _context
                                 .TaskItems
-                                .Include(t=>t.Project)
-                                .FirstOrDefaultAsync(t=> t.Id == id);
+                                .Include(t => t.Project)
+                                .FirstOrDefaultAsync(t => t.Id == id);
 
         if (task is null) return null;
 
@@ -194,6 +194,21 @@ public class TaskItemService : ITaskItemService
 
         await _context.SaveChangesAsync();
 
+        return _mapper.Map<TaskItemResponseDto>(task);
+    }
+
+    public async Task<TaskItemResponseDto?> UpdateStatusAsync(int id, TaskStatusUpdateRequest request)
+    {
+        var task = await _context
+                                .TaskItems
+                                .Include(t => t.Project)
+                                .FirstOrDefaultAsync(t => t.Id == id);
+
+        if (task is null) return null;
+        task.Status = request.Status;
+        task.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
         return _mapper.Map<TaskItemResponseDto>(task);
     }
 }
