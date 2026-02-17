@@ -223,6 +223,7 @@ if (app.Environment.IsDevelopment())
             options.EnableFilter();
             options.EnableDeepLinking();
             options.EnableTryItOutByDefault();
+            options.EnablePersistAuthorization();
         }
         );
 }

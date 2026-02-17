@@ -211,4 +211,12 @@ public class TaskItemService : ITaskItemService
         await _context.SaveChangesAsync();
         return _mapper.Map<TaskItemResponseDto>(task);
     }
+
+    public async Task<TaskItem?> GetTaskEntityAsync(int id)
+    {
+       return await _context
+                            .TaskItems
+                            .Include(t=> t.Project)
+                            .FirstOrDefaultAsync(t=> t.Id == id);
+    }
 }

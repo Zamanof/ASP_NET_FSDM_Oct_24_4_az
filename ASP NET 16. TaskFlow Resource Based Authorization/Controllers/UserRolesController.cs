@@ -1,6 +1,7 @@
 ﻿using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Common;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.DTOs.Auth_DTOs;
 using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Models;
+using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -70,12 +71,80 @@ public class UserRolesController : ControllerBase
     [HttpPost("{userId}/roles")]
     public async Task<ActionResult<ApiResponse<UserWithRolesDto>>> AssignRole(string userId,[FromBody] AssignRoleRequest request)
     {
-        throw new NotImplementedException();
+        var roleName = request.Role.Trim();
+
+        if (string.IsNullOrEmpty(roleName))
+            return BadRequest(ApiResponse<UserWithRolesDto>.ErrorResponse("Role name cannot be empty"));
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            return NotFound(ApiResponse<UserWithRolesDto>.ErrorResponse($"User with ID {userId} not found"));
+
+        var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExists)
+            return NotFound(ApiResponse<UserWithRolesDto>.ErrorResponse($"Role {roleName} does not exist"));
+
+        if (await _userManager.IsInRoleAsync(user, roleName))
+            return BadRequest(ApiResponse<UserWithRolesDto>.ErrorResponse($"User {user.Email} is already in role {roleName}"));
+
+        var result = await _userManager.AddToRoleAsync(user, roleName);
+
+        if (!result.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<UserWithRolesDto>.ErrorResponse($"Failed to assign role {roleName} to user {user.Email}"));
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var userWithRoles = new UserWithRolesDto
+        {
+            Id = user.Id,
+            Email = user.Email!,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Roles = roles.ToList()
+        };
+
+        return Ok(ApiResponse<UserWithRolesDto>.SuccessResponse(userWithRoles, $"Role {roleName} assigned to user {user.Email}"));
     }
 
     [HttpDelete("{userId}/roles/{roleName}")]
     public async Task<ActionResult<ApiResponse<UserWithRolesDto>>> RemoveRole(string userId, string roleName)
     {
-        throw new NotImplementedException();
+        roleName = roleName.Trim();
+
+        if (string.IsNullOrEmpty(roleName))
+            return BadRequest(ApiResponse<UserWithRolesDto>.ErrorResponse("Role name cannot be empty"));
+
+        var user = await _userManager.FindByIdAsync(userId);
+
+        if (user is null)
+            return NotFound(ApiResponse<UserWithRolesDto>.ErrorResponse($"User with ID {userId} not found"));
+
+        var roleExists = await _roleManager.RoleExistsAsync(roleName);
+
+        if (!roleExists)
+            return NotFound(ApiResponse<UserWithRolesDto>.ErrorResponse($"Role {roleName} does not exist"));
+
+        if (!await _userManager.IsInRoleAsync(user, roleName))
+            return BadRequest(ApiResponse<UserWithRolesDto>.ErrorResponse($"User {user.Email} not in role {roleName}"));
+
+        var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+
+        if (!result.Succeeded)
+            return StatusCode(StatusCodes.Status500InternalServerError, ApiResponse<UserWithRolesDto>.ErrorResponse($"Failed to remove role {roleName} to user {user.Email}"));
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var userWithRoles = new UserWithRolesDto
+        {
+            Id = user.Id,
+            Email = user.Email!,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Roles = roles.ToList()
+        };
+
+        return Ok(ApiResponse<UserWithRolesDto>.SuccessResponse(userWithRoles, $"Role {roleName} assigned to user {user.Email}"));
     }
 }
