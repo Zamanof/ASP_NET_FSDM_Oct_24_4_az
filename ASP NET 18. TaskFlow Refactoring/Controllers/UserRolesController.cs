@@ -1,11 +1,11 @@
-﻿using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Common;
-using ASP_NET_16._TaskFlow_Resource_Based_Authorization.DTOs.Auth_DTOs;
-using ASP_NET_16._TaskFlow_Resource_Based_Authorization.Models;
+﻿using ASP_NET_18._TaskFlow_Refactoring.Common;
+using ASP_NET_18._TaskFlow_Refactoring.DTOs.Auth_DTOs;
+using ASP_NET_18._TaskFlow_Refactoring.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ASP_NET_16._TaskFlow_Resource_Based_Authorization.Controllers;
+namespace ASP_NET_18._TaskFlow_Refactoring.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
