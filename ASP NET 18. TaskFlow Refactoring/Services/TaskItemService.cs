@@ -1,6 +1,6 @@
 ﻿using ASP_NET_18._TaskFlow_Refactoring.Common;
 using ASP_NET_18._TaskFlow_Refactoring.Data;
-using ASP_NET_18._TaskFlow_Refactoring.DTOs.Task_Items_DTOs;
+using ASP_NET_18._TaskFlow_Refactoring.DTOs;
 using ASP_NET_18._TaskFlow_Refactoring.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,4 @@
-﻿using ASP_NET_18._TaskFlow_Refactoring.DTOs.Project_DTOs;
+﻿using ASP_NET_18._TaskFlow_Refactoring.DTOs;
 using FluentValidation;
 
 namespace ASP_NET_18._TaskFlow_Refactoring.Validators;

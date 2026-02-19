@@ -1,5 +1,5 @@
 ﻿using ASP_NET_18._TaskFlow_Refactoring.Common;
-using ASP_NET_18._TaskFlow_Refactoring.DTOs.Task_Items_DTOs;
+using ASP_NET_18._TaskFlow_Refactoring.DTOs;
 using ASP_NET_18._TaskFlow_Refactoring.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -92,7 +92,7 @@ public class TaskItemsController : ControllerBase
 
         if (project is null) return NotFound();
 
-        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHiger");
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHigher");
 
         if (authResult is null) return Forbid();
 
@@ -120,7 +120,7 @@ public class TaskItemsController : ControllerBase
 
         if (project is null) return NotFound();
 
-        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHiger");
+        var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHigher");
         
         if (authResult is null) return Forbid();
 

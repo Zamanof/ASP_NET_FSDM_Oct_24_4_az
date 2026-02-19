@@ -1,6 +1,6 @@
 ﻿using ASP_NET_18._TaskFlow_Refactoring.Config;
 using ASP_NET_18._TaskFlow_Refactoring.Data;
-using ASP_NET_18._TaskFlow_Refactoring.DTOs.Auth_DTOs;
+using ASP_NET_18._TaskFlow_Refactoring.DTOs;
 using ASP_NET_18._TaskFlow_Refactoring.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

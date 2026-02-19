@@ -1,7 +1,6 @@
 ﻿using ASP_NET_18._TaskFlow_Refactoring.Common;
-using ASP_NET_18._TaskFlow_Refactoring.DTOs.Project_DTOs;
+using ASP_NET_18._TaskFlow_Refactoring.DTOs;
 using ASP_NET_18._TaskFlow_Refactoring.Services;
-using Azure.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
