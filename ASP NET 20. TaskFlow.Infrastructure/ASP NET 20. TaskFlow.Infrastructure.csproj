@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<RootNamespace>ASP_NET_20._TaskFlow.Infrastructure</RootNamespace>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.12" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.12" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.12" />
+  </ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ASP NET 20. TaskFlow.Application\ASP NET 20. TaskFlow.Application.csproj" />
+	  <ProjectReference Include="..\ASP NET 20. TaskFlow.Domain\ASP NET 20. TaskFlow.Domain.csproj" />
+	</ItemGroup>
+
+</Project>
