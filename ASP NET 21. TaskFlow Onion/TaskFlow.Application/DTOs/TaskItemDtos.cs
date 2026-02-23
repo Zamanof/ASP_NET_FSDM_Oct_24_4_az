@@ -25,11 +25,11 @@ public class UpdateTaskItemRequest
 {
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public TaskStatus Status { get; set; }
+    public TaskFlow.Domain.Entities.TaskStatus Status { get; set; }
     public TaskPriority Priority { get; set; }
 }
 
 public class TaskStatusUpdateRequest
 {
-    public TaskStatus Status { get; set; } = TaskStatus.ToDo;
+    public TaskFlow.Domain.Entities.TaskStatus Status { get; set; } = TaskFlow.Domain.Entities.TaskStatus.ToDo;
 }

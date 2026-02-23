@@ -1,4 +1,6 @@
 using TaskFlow.Api.Extensions;
+using TaskFlow.Application.Extensions;
+using TaskFlow.Infrastructure.Extensions;
 using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

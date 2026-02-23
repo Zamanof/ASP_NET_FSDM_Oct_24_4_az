@@ -1,5 +1,6 @@
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using TaskFlow.Application.Contracts.Storage;
-using Microsoft.AspNetCore.Hosting;
 
 namespace TaskFlow.Infrastructure.Storage;
 
@@ -8,9 +9,9 @@ public class LocalDiskStorage : IFileStorage
     private readonly string _basePath;
     private readonly ILogger<LocalDiskStorage> _logger;
 
-    public LocalDiskStorage(IWebHostEnvironment env, ILogger<LocalDiskStorage> logger)
+    public LocalDiskStorage(IHostEnvironment env, ILogger<LocalDiskStorage> logger)
     {
-        _basePath = Path.Combine(env.ContentRootPath, "Storage");
+        _basePath = Path.Combine(env.ContentRootPath ?? AppDomain.CurrentDomain.BaseDirectory, "Storage");
         _logger = logger;
     }
 
