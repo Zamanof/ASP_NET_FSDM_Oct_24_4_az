@@ -1,9 +1,10 @@
+using ASP_NET_21._TaskFlow_CQRS.Application.Repositories;
+using ASP_NET_21._TaskFlow_CQRS.Domain;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using TaskFlow.Application.Repositories;
-using TaskFlow.Domain.Entities;
-using TaskFlow.Infrastructure.Persistence;
 
-namespace TaskFlow.Infrastructure.Repositories;
+
+namespace ASP_NET_21._TaskFlow_CQRS.Infrastructure.Repositories;
 
 public class UserRepository : IUserRepository
 {

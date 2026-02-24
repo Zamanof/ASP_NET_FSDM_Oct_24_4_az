@@ -1,8 +1,9 @@
-using ASP_NET_20._TaskFlow.Data;
-using ASP_NET_20._TaskFlow.Models;
+using ASP_NET_21._TaskFlow_CQRS.Application.Repositories;
+using ASP_NET_21._TaskFlow_CQRS.Domain;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace ASP_NET_20._TaskFlow.DAL;
+namespace ASP_NET_21._TaskFlow_CQRS.Infrastructure.Repositories;
 
 public class ProjectRepository : IProjectRepository
 {
@@ -18,8 +19,7 @@ public class ProjectRepository : IProjectRepository
         return project;
     }
 
-    public async Task<Project?> FindAsync(int id) 
-        => await _context.Projects.FindAsync(id);
+    public async Task<Project?> FindAsync(int id) => await _context.Projects.FindAsync(id);
 
     public async Task<IEnumerable<Project>?> GetAllForUserAsync(string userId, IList<string> roles)
     {

@@ -1,21 +1,21 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using TaskFlow.Application.Config;
-using TaskFlow.Application.Contracts.Auth;
-using TaskFlow.Application.Contracts.Storage;
-using TaskFlow.Application.Repositories;
-using TaskFlow.Domain.Entities;
-using TaskFlow.Infrastructure.Persistence;
-using TaskFlow.Infrastructure.Repositories;
-using TaskFlow.Infrastructure.Services;
-using TaskFlow.Infrastructure.Storage;
+using ASP_NET_21._TaskFlow_CQRS.Application.Config;
+using ASP_NET_21._TaskFlow_CQRS.Application.Contracts.Auth;
+using ASP_NET_21._TaskFlow_CQRS.Application.Contracts.Storage;
+using ASP_NET_21._TaskFlow_CQRS.Application.Repositories;
+using ASP_NET_21._TaskFlow_CQRS.Domain;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Persistence;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Repositories;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Services;
+using ASP_NET_21._TaskFlow_CQRS.Infrastructure.Storage;
+using Microsoft.EntityFrameworkCore;
 
-namespace TaskFlow.Infrastructure.Extensions;
+namespace ASP_NET_21._TaskFlow_CQRS.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {

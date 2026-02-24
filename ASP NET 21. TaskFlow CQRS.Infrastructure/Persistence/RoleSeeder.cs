@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using TaskFlow.Domain.Entities;
+using ASP_NET_21._TaskFlow_CQRS.Domain;
 
-namespace TaskFlow.Infrastructure.Persistence;
+namespace ASP_NET_21._TaskFlow_CQRS.Infrastructure.Persistence;
 
 public static class RoleSeeder
 {

@@ -1,10 +1,9 @@
 
+using ASP_NET_21._TaskFlow_CQRS.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using TaskFlow.Domain.Entities;
-using TaskFlow.Infrastructure.Storage;
 
-namespace TaskFlow.Infrastructure.Persistence;
+namespace ASP_NET_21._TaskFlow_CQRS.Infrastructure.Persistence;
 
 public class TaskFlowDbContext : IdentityDbContext<ApplicationUser>
 {
