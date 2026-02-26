@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using ASP_NET_21._TaskFlow_CQRS.Application.Common;
 using ASP_NET_21._TaskFlow_CQRS.Application.DTOs;
 using ASP_NET_21._TaskFlow_CQRS.Application.Services;
+using MediatR;
+using ASP_NET_21._TaskFlow_CQRS.Application.Features.Projects.Queries;
+using ASP_NET_21._TaskFlow_CQRS.Application.Features.Projects.Commands;
 
 namespace ASP_NET_21._TaskFlow_CQRS.Api.Controllers;
 
@@ -14,20 +17,22 @@ public class ProjectsController : ControllerBase
 {
     private readonly IProjectService _projectService;
     private readonly IAuthorizationService _authorizationService;
+    private readonly IMediator _mediator;
 
     private string? UserId => User.FindFirstValue(ClaimTypes.NameIdentifier);
     private IList<string> UserRoles => User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
 
-    public ProjectsController(IProjectService projectService, IAuthorizationService authorizationService)
+    public ProjectsController(IProjectService projectService, IAuthorizationService authorizationService, IMediator mediator)
     {
         _projectService = projectService;
         _authorizationService = authorizationService;
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<ActionResult<ApiResponse<IEnumerable<ProjectResponseDto>>>> GetAll()
     {
-        var projects = await _projectService.GetAllForUserAsync(UserId!, UserRoles);
+        var projects = await _mediator.Send(new GetProjectsQuery(UserId!, UserRoles));
         return Ok(ApiResponse<IEnumerable<ProjectResponseDto>>.SuccessResponse(projects, "Projects returned successfully"));
     }
 
@@ -38,7 +43,7 @@ public class ProjectsController : ControllerBase
         if (project is null) return NotFound($"Project with ID {id} not found");
         var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectMemberOrHigher");
         if (!authResult.Succeeded) return Forbid();
-        var projectResponse = await _projectService.GetByIdAsync(id);
+        var projectResponse = await _mediator.Send(new GetProjectByIdQuery(id));
         return Ok(ApiResponse<ProjectResponseDto>.SuccessResponse(projectResponse!, "Project returned successfully"));
     }
 
@@ -47,7 +52,7 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<ApiResponse<ProjectResponseDto>>> Create([FromBody] CreateProjectRequest createProjectRequest)
     {
         if (!ModelState.IsValid) return BadRequest(ApiResponse<ProjectResponseDto>.ErrorResponse("Validation failed", ModelState));
-        var createdProject = await _projectService.CreateAsync(createProjectRequest, UserId!);
+        var createdProject = await _mediator.Send(new CreateProjectCommand(createProjectRequest, UserId!));
         return CreatedAtAction(nameof(GetById), new { id = createdProject.Id }, ApiResponse<ProjectResponseDto>.SuccessResponse(createdProject, "Project created successfully"));
     }
 
@@ -59,7 +64,7 @@ public class ProjectsController : ControllerBase
         if (project is null) return NotFound($"Project with ID {id} not found");
         var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
         if (!authResult.Succeeded) return Forbid();
-        var updatedProject = await _projectService.UpdateAsync(id, updateProjectRequest);
+        var updatedProject = await _mediator.Send(new UpdateProjectCommand(id, updateProjectRequest));
         if (updatedProject is null) return NotFound(ApiResponse<ProjectResponseDto>.ErrorResponse($"Project with ID {id} not found"));
         return Ok(ApiResponse<ProjectResponseDto>.SuccessResponse(updatedProject, "Project updated successfully"));
     }
@@ -71,7 +76,7 @@ public class ProjectsController : ControllerBase
         if (project is null) return NotFound($"Project with ID {id} not found");
         var authResult = await _authorizationService.AuthorizeAsync(User, project, "ProjectOwnerOrAdmin");
         if (!authResult.Succeeded) return Forbid();
-        await _projectService.DeleteAsync(id);
+        await _mediator.Send(new DeleteProjectCommand(id));
         return NoContent();
     }
 

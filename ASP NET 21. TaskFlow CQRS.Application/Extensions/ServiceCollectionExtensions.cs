@@ -16,6 +16,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITaskItemService, TaskItemService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IAttachmentService, AttachmentService>();
+
+        services.AddMediatR(config=>
+        {
+            config.RegisterServicesFromAssembly(typeof(ServiceCollectionExtensions).Assembly);
+        });
         return services;
     }
 }

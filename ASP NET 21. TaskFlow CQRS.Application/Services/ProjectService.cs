@@ -11,56 +11,18 @@ public class ProjectService : IProjectService
     private readonly IProjectRepository _projectRepo;
     private readonly IProjectMemberRepository _memberRepo;
     private readonly IUserRepository _userRepo;
-    private readonly IMapper _mapper;
     private readonly IAuthIdentityProvider _authIdentityProvider;
 
-    public ProjectService(IProjectRepository projectRepo, IProjectMemberRepository memberRepo, IUserRepository userRepo, IMapper mapper, IAuthIdentityProvider authIdentityProvider)
+    public ProjectService(IProjectRepository projectRepo, IProjectMemberRepository memberRepo, IUserRepository userRepo, IAuthIdentityProvider authIdentityProvider)
     {
         _projectRepo = projectRepo;
         _memberRepo = memberRepo;
         _userRepo = userRepo;
-        _mapper = mapper;
         _authIdentityProvider = authIdentityProvider;
     }
 
-    public async Task<IEnumerable<ProjectResponseDto>> GetAllForUserAsync(string userId, IList<string> roles)
-    {
-        var projects = await _projectRepo.GetAllForUserAsync(userId, roles);
-        return _mapper.Map<IEnumerable<ProjectResponseDto>>(projects ?? Enumerable.Empty<Project>());
-    }
-
-    public async Task<Project?> GetProjectEntityAsync(int id) => await _projectRepo.GetByIdWithTasksAndMembersAsync(id);
-
-    public async Task<ProjectResponseDto?> GetByIdAsync(int id)
-    {
-        var project = await _projectRepo.GetByIdWithTasksAsync(id);
-        return project == null ? null : _mapper.Map<ProjectResponseDto>(project);
-    }
-
-    public async Task<ProjectResponseDto> CreateAsync(CreateProjectRequest request, string ownerId)
-    {
-        var project = _mapper.Map<Project>(request);
-        project.OwnerId = ownerId;
-        project = await _projectRepo.AddAsync(project);
-        return _mapper.Map<ProjectResponseDto>(project);
-    }
-
-    public async Task<ProjectResponseDto?> UpdateAsync(int id, UpdateProjectRequest request)
-    {
-        var project = await _projectRepo.GetByIdWithTasksAsync(id);
-        if (project == null) return null;
-        _mapper.Map(request, project);
-        await _projectRepo.UpdateAsync(project);
-        return _mapper.Map<ProjectResponseDto>(project);
-    }
-
-    public async Task<bool> DeleteAsync(int id)
-    {
-        var project = await _projectRepo.FindAsync(id);
-        if (project == null) return false;
-        await _projectRepo.RemoveAsync(project);
-        return true;
-    }
+    public async Task<Project?> GetProjectEntityAsync(int id) 
+        => await _projectRepo.GetByIdWithTasksAndMembersAsync(id);   
 
     public async Task<IEnumerable<ProjectMemberResponseDto>> GetMembersAsync(int projectId)
     {

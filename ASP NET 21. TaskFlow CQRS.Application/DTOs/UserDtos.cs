@@ -9,6 +9,7 @@ public class UserWithRolesDto
     public IList<string> Roles { get; set; } = new List<string>();
 }
 
+
 public class AssignRoleRequest
 {
     public string Role { get; set; } = string.Empty;
