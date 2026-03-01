@@ -1,4 +1,4 @@
-﻿namespace ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.DTOs.Auth_DTOs;
+namespace ASP_NET_12._TaskFlow_Authentication_and_Authorizaton.DTOs.Auth_DTOs;
 
 public class RegisterRequest
 {
@@ -57,13 +57,8 @@ public class AuthResponseDto
     /// </summary>
     /// <example>john@doe.com</example>
     public string Email { get; set; } = string.Empty;
-<<<<<<< HEAD
-    public string AccessToken { get; set; } = string.Empty;
-    public DateTime ExpiredAt { get; set; }
+    /// <summary>
+    /// User roles
+    /// </summary>
     public IEnumerable<string> Roles { get; set; } = new List<string>();
-
-=======
-
-    public IEnumerable<string> Roles { get; set; } = new List<string>();
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
 }

@@ -7,7 +7,7 @@ using MediatR;
 
 namespace ASP_NET_21._TaskFlow_CQRS.Application.Features.Projects.Commands;
 
-class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectResponseDto>
+public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectResponseDto>
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IMapper _mapper;

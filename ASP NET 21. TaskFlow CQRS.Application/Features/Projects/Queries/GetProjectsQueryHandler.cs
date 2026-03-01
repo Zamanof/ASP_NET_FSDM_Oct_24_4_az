@@ -6,7 +6,7 @@ using System.Data;
 
 namespace ASP_NET_21._TaskFlow_CQRS.Application.Features.Projects.Queries;
 
-class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IEnumerable<ProjectResponseDto>>
+public class GetProjectsQueryHandler : IRequestHandler<GetProjectsQuery, IEnumerable<ProjectResponseDto>>
 {
     private readonly IProjectRepository _projectRepository;
     private readonly IMapper _mapper;

@@ -8,10 +8,6 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-<<<<<<< HEAD
-=======
-using Microsoft.Extensions.Options;
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -52,7 +48,6 @@ builder.Services.AddSwaggerGen(
 
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
-<<<<<<< HEAD
             Description = "JWT Authorization header using Bearer scheme.\r\n\r\n Example: Bearer {token}",
             Name = "Authorization",
             In = ParameterLocation.Header,
@@ -71,36 +66,9 @@ builder.Services.AddSwaggerGen(
                         Type = ReferenceType.SecurityScheme,
                         Id="Bearer"
                     }
-                },new string[]{}
+                }, new string[] { }
             }
         });
-=======
-            Description = """
-                JWT Suthorization header using the Bearer scheme. 
-                Example: Authorization: Bearer {token}
-                """,
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer"
-        });
-
-        options.AddSecurityRequirement(
-            new OpenApiSecurityRequirement
-            {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id="Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-            });
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
     }
 
     );
@@ -113,73 +81,12 @@ builder.Services.AddDbContext<TaskFlowDbContext>(
     options => options.UseSqlServer(connectionString)
     );
 
-<<<<<<< HEAD
-
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
     options =>
     {
         options.Password.RequireNonAlphanumeric = false;
-    }
-    )
+    })
     .AddEntityFrameworkStores<TaskFlowDbContext>();
-=======
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
-    options =>
-    {
-        options.Password.RequireDigit = true;
-        options.Password.RequireLowercase = true;
-        options.Password.RequireUppercase = true;
-        options.Password.RequireNonAlphanumeric = false;
-        options.Password.RequiredLength = 6;
-
-        options.User.RequireUniqueEmail = true;
-        options.SignIn.RequireConfirmedEmail = false;
-    }
-
-)
-    .AddEntityFrameworkStores<TaskFlowDbContext>()
-    .AddDefaultTokenProviders();
-
-// JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"];
-var issuer = jwtSettings["Issuer"];
-var audience = jwtSettings["Audience"];
-
-builder.Services.AddAuthentication(
-    options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    }
-    )
-    .AddJwtBearer(
-        options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = issuer,
-                ValidAudience = audience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!)),
-                ClockSkew = TimeSpan.Zero
-            };
-        }
-    );
-
-// Authorization policies
-builder.Services.AddAuthorization(
-    options =>
-    {
-        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("AdminOrManager", policy => policy.RequireRole("Admin", "Manager"));
-        options.AddPolicy("UserOrAbove", policy => policy.RequireRole("Admin", "Manager", "User"));
-    }
-    );
->>>>>>> fcc8b3cbf15e0de21c2f5a46f536e8db4ceb024a
 
 // JWT config for Authentication
 var jwtSettings = builder.Configuration.GetSection("JWTSettings");
@@ -216,10 +123,9 @@ builder.Services.AddAuthorization(
     options =>
     {
         options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-        options.AddPolicy("AdminorManager", policy => policy.RequireRole("Admin", "Manager"));
+        options.AddPolicy("AdminOrManager", policy => policy.RequireRole("Admin", "Manager"));
         options.AddPolicy("UserOrAbove", policy => policy.RequireRole("Admin", "Manager", "User"));
-    }
-    );
+    });
 
 // Services
 builder.Services.AddScoped<IProjectService, ProjectService>();
@@ -259,28 +165,12 @@ app.MapControllers();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-
     try
     {
         await RoleSeeder.SeedRolesAsync(services);
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occured while seeding roles");
-    }
-}
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        await RoleSeeder.SeedRolesAsync(services);
-    }
-    catch (Exception ex)
-    {
-
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "An error occured while seeding roles");
     }
