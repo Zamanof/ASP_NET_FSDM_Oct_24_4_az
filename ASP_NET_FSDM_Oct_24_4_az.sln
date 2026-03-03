@@ -124,6 +124,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 21. TaskFlow CQRS.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 21. TaskFlow CQRS Unit tests", "ASP NET 21. TaskFlow CQRS Unit tests\ASP NET 21. TaskFlow CQRS Unit tests.csproj", "{A08C985D-7783-4AD5-9089-CDAE4C9963FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ASP NET 21. TaskFlow CQRS Integration tests", "ASP NET 21. TaskFlow CQRS Integration tests\ASP NET 21. TaskFlow CQRS Integration tests.csproj", "{79689DE8-E409-4DE1-85A9-7F1824E124BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -290,6 +292,10 @@ Global
 		{A08C985D-7783-4AD5-9089-CDAE4C9963FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A08C985D-7783-4AD5-9089-CDAE4C9963FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A08C985D-7783-4AD5-9089-CDAE4C9963FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79689DE8-E409-4DE1-85A9-7F1824E124BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79689DE8-E409-4DE1-85A9-7F1824E124BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79689DE8-E409-4DE1-85A9-7F1824E124BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79689DE8-E409-4DE1-85A9-7F1824E124BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -339,6 +345,7 @@ Global
 		{7F17FD28-36AF-46CB-9F24-4B68BC0E941A} = {3363D705-D6D5-4630-B19A-2FD5BBB9093E}
 		{646B18C0-0D19-42B6-9BB1-626C12C3EC58} = {3363D705-D6D5-4630-B19A-2FD5BBB9093E}
 		{A08C985D-7783-4AD5-9089-CDAE4C9963FB} = {3363D705-D6D5-4630-B19A-2FD5BBB9093E}
+		{79689DE8-E409-4DE1-85A9-7F1824E124BE} = {3363D705-D6D5-4630-B19A-2FD5BBB9093E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {497B41C6-99E9-4EFF-B1E0-382CB277FD5D}

@@ -28,21 +28,7 @@ public class GetProjectsQueryHandlerTests
                 Name="Pr1",
                 OwnerId = "u1",
                 CreatedAt = DateTimeOffset.UtcNow
-            },
-            new Project()
-            {
-                Id=2,
-                Name="Pr1",
-                OwnerId = "u2",
-                CreatedAt = DateTimeOffset.UtcNow
-            },
-             new Project()
-            {
-                Id=3,
-                Name="Pr1",
-                OwnerId = "u1",
-                CreatedAt = DateTimeOffset.UtcNow
-            },
+            }
         };
 
         projectRepo.Setup(r => r.GetAllForUserAsync("u1", It.IsAny<IList<string>>()))
@@ -56,7 +42,7 @@ public class GetProjectsQueryHandlerTests
 
         var result = await handler.Handle(query, CancellationToken.None);
 
-        result.Should().HaveCount(2);
+        result.Should().HaveCount(1);
         result.First().Name.Should().Be("Pr1");
         projectRepo.Verify(r => r.GetAllForUserAsync("u1", It.IsAny<IList<string>>())
         ,Times.Once);

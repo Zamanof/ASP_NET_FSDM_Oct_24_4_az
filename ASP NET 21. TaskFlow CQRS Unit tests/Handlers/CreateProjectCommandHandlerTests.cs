@@ -20,6 +20,7 @@ public class CreateProjectCommandHandlerTests
     {
         // Arrange
         var projectRepo = new Mock<IProjectRepository>();
+
         var project = new Project
         {
             Id = 1,

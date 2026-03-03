@@ -1,7 +1,7 @@
 ﻿using ASP_NET_21._TaskFlow_CQRS.Application.DTOs;
 using FluentAssertions;
 
-namespace ASP_NET_21._TaskFlow_CQRS_Unit_tests;
+namespace ASP_NET_21._TaskFlow_CQRS_Unit_tests.Parametrized;
 
 public class TaskItemQueryParamsTests
 {

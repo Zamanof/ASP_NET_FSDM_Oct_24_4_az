@@ -20,3 +20,5 @@ app.UseTaskFlowPipeline();
 await app.EnsureRolesSeededAsync();
 
 app.Run();
+
+public partial class Program { }
